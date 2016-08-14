@@ -1,0 +1,6 @@
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\bin\Debug\PageList.exe.config
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\bin\Debug\PageList.exe
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\bin\Debug\PageList.pdb
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\obj\Debug\PageList.csprojResolveAssemblyReference.cache
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\obj\Debug\PageList.exe
+C:\Users\Baron PH\Desktop\suicide project 2\PageList\PageList\obj\Debug\PageList.pdb
