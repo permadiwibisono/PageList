@@ -8,18 +8,7 @@ namespace PageList.Commons
 {
     public class PageCollection<T> where T : class
     {
-        //Basic Property
-        private int _recordPerPage;
-        private IEnumerable<T> _list;
-        private int _pageSize;
-
-        //UI Property
-        private int _pageActive;
-        private readonly int _maxPageShow = 8;
-        private int _pageStart;
-        private int _pageEnd;
-
-        public PageCollection(IEnumerable<T> list, int recordPerPage, int pageActive = 1, int maxPageShow=8)
+        public PageCollection(IEnumerable<T> list, int recordPerPage, int pageActive = 1, int maxPageShow = 8)
         {
             _list = list;
             RecordPerPage = recordPerPage;
@@ -27,7 +16,13 @@ namespace PageList.Commons
             _maxPageShow = maxPageShow;
         }
 
-        public int RecordPerPage {
+        //Basic Property
+        private int _recordPerPage;
+        private IEnumerable<T> _list;
+        private int _pageSize;
+
+        public int RecordPerPage
+        {
             get { return _recordPerPage; }
 
             set
@@ -37,13 +32,20 @@ namespace PageList.Commons
                     throw new InvalidOperationException("Record per Page should be greater then 0");
                 }
                 _recordPerPage = value;
-                _pageSize = (_list.Count() / RecordPerPage)+(_list.Count()%RecordPerPage>0?1:0);
+                _pageSize = (_list.Count() / RecordPerPage) + (_list.Count() % RecordPerPage > 0 ? 1 : 0);
             }
         }
 
-        public int PageSize { get { return _pageSize; }}
+        public int PageSize { get { return _pageSize; } }
 
-        public int PageActive {
+        //UI Property
+        private int _pageActive;
+        private readonly int _maxPageShow = 8;
+        private int _pageStart;
+        private int _pageEnd;
+
+        public int PageActive
+        {
             get
             {
                 if (_pageActive < 1)
@@ -54,12 +56,12 @@ namespace PageList.Commons
             {
                 if (value < 1)
                     throw new InvalidOperationException("Page active should be greater than 0");
-                if (value > PageSize)
+                if (value > PageSize && PageSize > 0)
                     throw new InvalidOperationException("Page active out of range");
                 _pageActive = value;
                 _pageStart = (((_pageActive - 1) / _maxPageShow) * _maxPageShow) + 1;
                 _pageEnd = _pageStart - 1 + _maxPageShow;
-                var middle = _maxPageShow / 2 + (_maxPageShow%2);
+                var middle = _maxPageShow / 2 + (_maxPageShow % 2);
                 if (PageActive % _maxPageShow > middle)
                 {
                     _pageStart += (PageActive % _maxPageShow - middle);
@@ -72,13 +74,13 @@ namespace PageList.Commons
                 }
                 else if (PageActive / _maxPageShow > 0)
                 {
-                    _pageStart -= middle-(PageActive % _maxPageShow);
+                    _pageStart -= middle - (PageActive % _maxPageShow);
                     _pageEnd -= middle - (PageActive % _maxPageShow);
                 }
                 if (PageSize < _pageEnd)
                 {
                     _pageEnd = PageSize;
-                    _pageStart = _pageEnd - _maxPageShow+1 > 0 ? _pageEnd - _maxPageShow+1 : 1;
+                    _pageStart = _pageEnd - _maxPageShow + 1 > 0 ? _pageEnd - _maxPageShow + 1 : 1;
 
                 }
             }
@@ -87,6 +89,19 @@ namespace PageList.Commons
         public int PageStart { get { return _pageStart; } }
 
         public int PageEnd { get { return _pageEnd; } }
+
+        public int FirstIndex { get { return Total == 0 ? 0 : ((PageActive - 1) * RecordPerPage) + 1; } }
+
+        public int LastIndex
+        {
+            get
+            {
+                var a = ((PageActive - 1) * RecordPerPage) + RecordPerPage;
+                return a > Total ? Total : a;
+            }
+        }
+
+        public int Total { get { return _list.Count(); } }
 
         //Method
         public List<T> GetPage(int page)
@@ -104,11 +119,18 @@ namespace PageList.Commons
             return GetPage(_pageSize);
         }
 
+        //Web MVC Property
+        public string Url { get; set; }
+        public string Placeholder { get; set; }
+        public bool IsAjax { get; set; }
+
+
         public string GeneratePager()
         {
-            string _ui="<<"+(_pageActive>1?" <":"");
-            for (int i = _pageStart; i <= _pageEnd; i++) {
-                _ui += " " + i.ToString() + ((_pageActive==i)?"a ":" ");
+            string _ui = "<<" + (_pageActive > 1 ? " <" : "");
+            for (int i = _pageStart; i <= _pageEnd; i++)
+            {
+                _ui += " " + i.ToString() + ((_pageActive == i) ? "a " : " ");
             }
             return _ui + (_pageActive < _pageSize ? "> " : "") + ">>";
         }
