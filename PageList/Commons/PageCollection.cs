@@ -120,7 +120,29 @@ namespace PageList.Commons
         }
 
         //Web MVC Property
-        public string Url { get; set; }
+        private string url;
+        //setting property Url without params page
+        public string Url
+        {
+            get
+            {
+                if (IsAjax)
+                    return url;
+                if (url.IndexOf('?') > -1)
+                {
+                    return url + "&page=";
+                }
+                else
+                {
+                    return url + "?page=";
+
+                }
+            }
+            set
+            {
+                url = value;
+            }
+        }
         public string Placeholder { get; set; }
         public bool IsAjax { get; set; }
 
